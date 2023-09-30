@@ -5,7 +5,7 @@ from mido import MidiFile, MidiTrack, Message
 #TODO add styles
 instruments = ["piano", "guitar", "violin", "drums", "flute", "trumpet", "saxophone", "clarinet", "synthesizer", "electric_guitar", "bass_guitar"]
 notes = ["C", "D", "E", "F", "G", "A", "B"]
-
+#TODO - Find the reason; why only couple of instruments get created
 instrument_programs = {
     "Yamaha Grand Piano": "0",
     "Bright Yamaha Grand": "1",
@@ -166,12 +166,11 @@ for instrument in instruments:
 
         file_counter += 1
 
-        # Create a new MIDI file for each combination
         midi_file = MidiFile()
         midi_track = MidiTrack()
         midi_file.tracks.append(midi_track)
 
-        program = instrument_programs.get(instrument, 0)  # Get program number from the dictionary
+        program = instrument_programs.get(instrument, 0) 
         midi_track.append(Message("program_change", program=program))
 
         note_value = notes.index(note) + 60

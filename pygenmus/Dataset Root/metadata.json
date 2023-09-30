@@ -1,562 +1,226 @@
 {
-    "piano_C_fingerpicking.wav": {
+    "piano_C.wav": {
         "instrument": "piano",
-        "note": "C",
-        "style": "fingerpicking"
+        "note": "C"
     },
-    "piano_C_strumming.wav": {
+    "piano_D.wav": {
         "instrument": "piano",
-        "note": "C",
-        "style": "strumming"
+        "note": "D"
     },
-    "piano_C_legato.wav": {
+    "piano_E.wav": {
         "instrument": "piano",
-        "note": "C",
-        "style": "legato"
+        "note": "E"
     },
-    "piano_C_staccato.wav": {
+    "piano_F.wav": {
         "instrument": "piano",
-        "note": "C",
-        "style": "staccato"
+        "note": "F"
     },
-    "piano_D_fingerpicking.wav": {
+    "piano_G.wav": {
         "instrument": "piano",
-        "note": "D",
-        "style": "fingerpicking"
+        "note": "G"
     },
-    "piano_D_strumming.wav": {
+    "piano_A.wav": {
         "instrument": "piano",
-        "note": "D",
-        "style": "strumming"
+        "note": "A"
     },
-    "piano_D_legato.wav": {
+    "piano_B.wav": {
         "instrument": "piano",
-        "note": "D",
-        "style": "legato"
+        "note": "B"
     },
-    "piano_D_staccato.wav": {
-        "instrument": "piano",
-        "note": "D",
-        "style": "staccato"
-    },
-    "piano_E_fingerpicking.wav": {
-        "instrument": "piano",
-        "note": "E",
-        "style": "fingerpicking"
-    },
-    "piano_E_strumming.wav": {
-        "instrument": "piano",
-        "note": "E",
-        "style": "strumming"
-    },
-    "piano_E_legato.wav": {
-        "instrument": "piano",
-        "note": "E",
-        "style": "legato"
-    },
-    "piano_E_staccato.wav": {
-        "instrument": "piano",
-        "note": "E",
-        "style": "staccato"
-    },
-    "piano_F_fingerpicking.wav": {
-        "instrument": "piano",
-        "note": "F",
-        "style": "fingerpicking"
-    },
-    "piano_F_strumming.wav": {
-        "instrument": "piano",
-        "note": "F",
-        "style": "strumming"
-    },
-    "piano_F_legato.wav": {
-        "instrument": "piano",
-        "note": "F",
-        "style": "legato"
-    },
-    "piano_F_staccato.wav": {
-        "instrument": "piano",
-        "note": "F",
-        "style": "staccato"
-    },
-    "piano_G_fingerpicking.wav": {
-        "instrument": "piano",
-        "note": "G",
-        "style": "fingerpicking"
-    },
-    "piano_G_strumming.wav": {
-        "instrument": "piano",
-        "note": "G",
-        "style": "strumming"
-    },
-    "piano_G_legato.wav": {
-        "instrument": "piano",
-        "note": "G",
-        "style": "legato"
-    },
-    "piano_G_staccato.wav": {
-        "instrument": "piano",
-        "note": "G",
-        "style": "staccato"
-    },
-    "piano_A_fingerpicking.wav": {
-        "instrument": "piano",
-        "note": "A",
-        "style": "fingerpicking"
-    },
-    "piano_A_strumming.wav": {
-        "instrument": "piano",
-        "note": "A",
-        "style": "strumming"
-    },
-    "piano_A_legato.wav": {
-        "instrument": "piano",
-        "note": "A",
-        "style": "legato"
-    },
-    "piano_A_staccato.wav": {
-        "instrument": "piano",
-        "note": "A",
-        "style": "staccato"
-    },
-    "piano_B_fingerpicking.wav": {
-        "instrument": "piano",
-        "note": "B",
-        "style": "fingerpicking"
-    },
-    "piano_B_strumming.wav": {
-        "instrument": "piano",
-        "note": "B",
-        "style": "strumming"
-    },
-    "piano_B_legato.wav": {
-        "instrument": "piano",
-        "note": "B",
-        "style": "legato"
-    },
-    "piano_B_staccato.wav": {
-        "instrument": "piano",
-        "note": "B",
-        "style": "staccato"
-    },
-    "guitar_C_fingerpicking.wav": {
+    "guitar_C.wav": {
         "instrument": "guitar",
-        "note": "C",
-        "style": "fingerpicking"
+        "note": "C"
     },
-    "guitar_C_strumming.wav": {
+    "guitar_D.wav": {
         "instrument": "guitar",
-        "note": "C",
-        "style": "strumming"
+        "note": "D"
     },
-    "guitar_C_legato.wav": {
+    "guitar_E.wav": {
         "instrument": "guitar",
-        "note": "C",
-        "style": "legato"
+        "note": "E"
     },
-    "guitar_C_staccato.wav": {
+    "guitar_F.wav": {
         "instrument": "guitar",
-        "note": "C",
-        "style": "staccato"
+        "note": "F"
     },
-    "guitar_D_fingerpicking.wav": {
+    "guitar_G.wav": {
         "instrument": "guitar",
-        "note": "D",
-        "style": "fingerpicking"
+        "note": "G"
     },
-    "guitar_D_strumming.wav": {
+    "guitar_A.wav": {
         "instrument": "guitar",
-        "note": "D",
-        "style": "strumming"
+        "note": "A"
     },
-    "guitar_D_legato.wav": {
+    "guitar_B.wav": {
         "instrument": "guitar",
-        "note": "D",
-        "style": "legato"
+        "note": "B"
     },
-    "guitar_D_staccato.wav": {
-        "instrument": "guitar",
-        "note": "D",
-        "style": "staccato"
-    },
-    "guitar_E_fingerpicking.wav": {
-        "instrument": "guitar",
-        "note": "E",
-        "style": "fingerpicking"
-    },
-    "guitar_E_strumming.wav": {
-        "instrument": "guitar",
-        "note": "E",
-        "style": "strumming"
-    },
-    "guitar_E_legato.wav": {
-        "instrument": "guitar",
-        "note": "E",
-        "style": "legato"
-    },
-    "guitar_E_staccato.wav": {
-        "instrument": "guitar",
-        "note": "E",
-        "style": "staccato"
-    },
-    "guitar_F_fingerpicking.wav": {
-        "instrument": "guitar",
-        "note": "F",
-        "style": "fingerpicking"
-    },
-    "guitar_F_strumming.wav": {
-        "instrument": "guitar",
-        "note": "F",
-        "style": "strumming"
-    },
-    "guitar_F_legato.wav": {
-        "instrument": "guitar",
-        "note": "F",
-        "style": "legato"
-    },
-    "guitar_F_staccato.wav": {
-        "instrument": "guitar",
-        "note": "F",
-        "style": "staccato"
-    },
-    "guitar_G_fingerpicking.wav": {
-        "instrument": "guitar",
-        "note": "G",
-        "style": "fingerpicking"
-    },
-    "guitar_G_strumming.wav": {
-        "instrument": "guitar",
-        "note": "G",
-        "style": "strumming"
-    },
-    "guitar_G_legato.wav": {
-        "instrument": "guitar",
-        "note": "G",
-        "style": "legato"
-    },
-    "guitar_G_staccato.wav": {
-        "instrument": "guitar",
-        "note": "G",
-        "style": "staccato"
-    },
-    "guitar_A_fingerpicking.wav": {
-        "instrument": "guitar",
-        "note": "A",
-        "style": "fingerpicking"
-    },
-    "guitar_A_strumming.wav": {
-        "instrument": "guitar",
-        "note": "A",
-        "style": "strumming"
-    },
-    "guitar_A_legato.wav": {
-        "instrument": "guitar",
-        "note": "A",
-        "style": "legato"
-    },
-    "guitar_A_staccato.wav": {
-        "instrument": "guitar",
-        "note": "A",
-        "style": "staccato"
-    },
-    "guitar_B_fingerpicking.wav": {
-        "instrument": "guitar",
-        "note": "B",
-        "style": "fingerpicking"
-    },
-    "guitar_B_strumming.wav": {
-        "instrument": "guitar",
-        "note": "B",
-        "style": "strumming"
-    },
-    "guitar_B_legato.wav": {
-        "instrument": "guitar",
-        "note": "B",
-        "style": "legato"
-    },
-    "guitar_B_staccato.wav": {
-        "instrument": "guitar",
-        "note": "B",
-        "style": "staccato"
-    },
-    "violin_C_fingerpicking.wav": {
+    "violin_C.wav": {
         "instrument": "violin",
-        "note": "C",
-        "style": "fingerpicking"
+        "note": "C"
     },
-    "violin_C_strumming.wav": {
+    "violin_D.wav": {
         "instrument": "violin",
-        "note": "C",
-        "style": "strumming"
+        "note": "D"
     },
-    "violin_C_legato.wav": {
+    "violin_E.wav": {
         "instrument": "violin",
-        "note": "C",
-        "style": "legato"
+        "note": "E"
     },
-    "violin_C_staccato.wav": {
+    "violin_F.wav": {
         "instrument": "violin",
-        "note": "C",
-        "style": "staccato"
+        "note": "F"
     },
-    "violin_D_fingerpicking.wav": {
+    "violin_G.wav": {
         "instrument": "violin",
-        "note": "D",
-        "style": "fingerpicking"
+        "note": "G"
     },
-    "violin_D_strumming.wav": {
+    "violin_A.wav": {
         "instrument": "violin",
-        "note": "D",
-        "style": "strumming"
+        "note": "A"
     },
-    "violin_D_legato.wav": {
+    "violin_B.wav": {
         "instrument": "violin",
-        "note": "D",
-        "style": "legato"
+        "note": "B"
     },
-    "violin_D_staccato.wav": {
-        "instrument": "violin",
-        "note": "D",
-        "style": "staccato"
-    },
-    "violin_E_fingerpicking.wav": {
-        "instrument": "violin",
-        "note": "E",
-        "style": "fingerpicking"
-    },
-    "violin_E_strumming.wav": {
-        "instrument": "violin",
-        "note": "E",
-        "style": "strumming"
-    },
-    "violin_E_legato.wav": {
-        "instrument": "violin",
-        "note": "E",
-        "style": "legato"
-    },
-    "violin_E_staccato.wav": {
-        "instrument": "violin",
-        "note": "E",
-        "style": "staccato"
-    },
-    "violin_F_fingerpicking.wav": {
-        "instrument": "violin",
-        "note": "F",
-        "style": "fingerpicking"
-    },
-    "violin_F_strumming.wav": {
-        "instrument": "violin",
-        "note": "F",
-        "style": "strumming"
-    },
-    "violin_F_legato.wav": {
-        "instrument": "violin",
-        "note": "F",
-        "style": "legato"
-    },
-    "violin_F_staccato.wav": {
-        "instrument": "violin",
-        "note": "F",
-        "style": "staccato"
-    },
-    "violin_G_fingerpicking.wav": {
-        "instrument": "violin",
-        "note": "G",
-        "style": "fingerpicking"
-    },
-    "violin_G_strumming.wav": {
-        "instrument": "violin",
-        "note": "G",
-        "style": "strumming"
-    },
-    "violin_G_legato.wav": {
-        "instrument": "violin",
-        "note": "G",
-        "style": "legato"
-    },
-    "violin_G_staccato.wav": {
-        "instrument": "violin",
-        "note": "G",
-        "style": "staccato"
-    },
-    "violin_A_fingerpicking.wav": {
-        "instrument": "violin",
-        "note": "A",
-        "style": "fingerpicking"
-    },
-    "violin_A_strumming.wav": {
-        "instrument": "violin",
-        "note": "A",
-        "style": "strumming"
-    },
-    "violin_A_legato.wav": {
-        "instrument": "violin",
-        "note": "A",
-        "style": "legato"
-    },
-    "violin_A_staccato.wav": {
-        "instrument": "violin",
-        "note": "A",
-        "style": "staccato"
-    },
-    "violin_B_fingerpicking.wav": {
-        "instrument": "violin",
-        "note": "B",
-        "style": "fingerpicking"
-    },
-    "violin_B_strumming.wav": {
-        "instrument": "violin",
-        "note": "B",
-        "style": "strumming"
-    },
-    "violin_B_legato.wav": {
-        "instrument": "violin",
-        "note": "B",
-        "style": "legato"
-    },
-    "violin_B_staccato.wav": {
-        "instrument": "violin",
-        "note": "B",
-        "style": "staccato"
-    },
-    "drums_C_fingerpicking.wav": {
+    "drums_C.wav": {
         "instrument": "drums",
-        "note": "C",
-        "style": "fingerpicking"
+        "note": "C"
     },
-    "drums_C_strumming.wav": {
+    "drums_D.wav": {
         "instrument": "drums",
-        "note": "C",
-        "style": "strumming"
+        "note": "D"
     },
-    "drums_C_legato.wav": {
+    "drums_E.wav": {
         "instrument": "drums",
-        "note": "C",
-        "style": "legato"
+        "note": "E"
     },
-    "drums_C_staccato.wav": {
+    "drums_F.wav": {
         "instrument": "drums",
-        "note": "C",
-        "style": "staccato"
+        "note": "F"
     },
-    "drums_D_fingerpicking.wav": {
+    "drums_G.wav": {
         "instrument": "drums",
-        "note": "D",
-        "style": "fingerpicking"
+        "note": "G"
     },
-    "drums_D_strumming.wav": {
+    "drums_A.wav": {
         "instrument": "drums",
-        "note": "D",
-        "style": "strumming"
+        "note": "A"
     },
-    "drums_D_legato.wav": {
+    "drums_B.wav": {
         "instrument": "drums",
-        "note": "D",
-        "style": "legato"
+        "note": "B"
     },
-    "drums_D_staccato.wav": {
-        "instrument": "drums",
-        "note": "D",
-        "style": "staccato"
+    "flute_C.wav": {
+        "instrument": "flute",
+        "note": "C"
     },
-    "drums_E_fingerpicking.wav": {
-        "instrument": "drums",
-        "note": "E",
-        "style": "fingerpicking"
+    "flute_D.wav": {
+        "instrument": "flute",
+        "note": "D"
     },
-    "drums_E_strumming.wav": {
-        "instrument": "drums",
-        "note": "E",
-        "style": "strumming"
+    "flute_E.wav": {
+        "instrument": "flute",
+        "note": "E"
     },
-    "drums_E_legato.wav": {
-        "instrument": "drums",
-        "note": "E",
-        "style": "legato"
+    "flute_F.wav": {
+        "instrument": "flute",
+        "note": "F"
     },
-    "drums_E_staccato.wav": {
-        "instrument": "drums",
-        "note": "E",
-        "style": "staccato"
+    "flute_G.wav": {
+        "instrument": "flute",
+        "note": "G"
     },
-    "drums_F_fingerpicking.wav": {
-        "instrument": "drums",
-        "note": "F",
-        "style": "fingerpicking"
+    "flute_A.wav": {
+        "instrument": "flute",
+        "note": "A"
     },
-    "drums_F_strumming.wav": {
-        "instrument": "drums",
-        "note": "F",
-        "style": "strumming"
+    "flute_B.wav": {
+        "instrument": "flute",
+        "note": "B"
     },
-    "drums_F_legato.wav": {
-        "instrument": "drums",
-        "note": "F",
-        "style": "legato"
+    "trumpet_C.wav": {
+        "instrument": "trumpet",
+        "note": "C"
     },
-    "drums_F_staccato.wav": {
-        "instrument": "drums",
-        "note": "F",
-        "style": "staccato"
+    "trumpet_D.wav": {
+        "instrument": "trumpet",
+        "note": "D"
     },
-    "drums_G_fingerpicking.wav": {
-        "instrument": "drums",
-        "note": "G",
-        "style": "fingerpicking"
+    "trumpet_E.wav": {
+        "instrument": "trumpet",
+        "note": "E"
     },
-    "drums_G_strumming.wav": {
-        "instrument": "drums",
-        "note": "G",
-        "style": "strumming"
+    "trumpet_F.wav": {
+        "instrument": "trumpet",
+        "note": "F"
     },
-    "drums_G_legato.wav": {
-        "instrument": "drums",
-        "note": "G",
-        "style": "legato"
+    "trumpet_G.wav": {
+        "instrument": "trumpet",
+        "note": "G"
     },
-    "drums_G_staccato.wav": {
-        "instrument": "drums",
-        "note": "G",
-        "style": "staccato"
+    "trumpet_A.wav": {
+        "instrument": "trumpet",
+        "note": "A"
     },
-    "drums_A_fingerpicking.wav": {
-        "instrument": "drums",
-        "note": "A",
-        "style": "fingerpicking"
+    "trumpet_B.wav": {
+        "instrument": "trumpet",
+        "note": "B"
     },
-    "drums_A_strumming.wav": {
-        "instrument": "drums",
-        "note": "A",
-        "style": "strumming"
+    "saxophone_C.wav": {
+        "instrument": "saxophone",
+        "note": "C"
     },
-    "drums_A_legato.wav": {
-        "instrument": "drums",
-        "note": "A",
-        "style": "legato"
+    "saxophone_D.wav": {
+        "instrument": "saxophone",
+        "note": "D"
     },
-    "drums_A_staccato.wav": {
-        "instrument": "drums",
-        "note": "A",
-        "style": "staccato"
+    "saxophone_E.wav": {
+        "instrument": "saxophone",
+        "note": "E"
     },
-    "drums_B_fingerpicking.wav": {
-        "instrument": "drums",
-        "note": "B",
-        "style": "fingerpicking"
+    "saxophone_F.wav": {
+        "instrument": "saxophone",
+        "note": "F"
     },
-    "drums_B_strumming.wav": {
-        "instrument": "drums",
-        "note": "B",
-        "style": "strumming"
+    "saxophone_G.wav": {
+        "instrument": "saxophone",
+        "note": "G"
     },
-    "drums_B_legato.wav": {
-        "instrument": "drums",
-        "note": "B",
-        "style": "legato"
+    "saxophone_A.wav": {
+        "instrument": "saxophone",
+        "note": "A"
     },
-    "drums_B_staccato.wav": {
-        "instrument": "drums",
-        "note": "B",
-        "style": "staccato"
+    "saxophone_B.wav": {
+        "instrument": "saxophone",
+        "note": "B"
+    },
+    "clarinet_C.wav": {
+        "instrument": "clarinet",
+        "note": "C"
+    },
+    "clarinet_D.wav": {
+        "instrument": "clarinet",
+        "note": "D"
+    },
+    "clarinet_E.wav": {
+        "instrument": "clarinet",
+        "note": "E"
+    },
+    "clarinet_F.wav": {
+        "instrument": "clarinet",
+        "note": "F"
+    },
+    "clarinet_G.wav": {
+        "instrument": "clarinet",
+        "note": "G"
+    },
+    "clarinet_A.wav": {
+        "instrument": "clarinet",
+        "note": "A"
+    },
+    "clarinet_B.wav": {
+        "instrument": "clarinet",
+        "note": "B"
     }
 }

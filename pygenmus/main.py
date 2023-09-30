@@ -1,11 +1,9 @@
 import os
-import random
 import json
 from midi2audio import FluidSynth as MidiFluidSynth
 from mido import MidiFile, MidiTrack, Message
-
-#TODO add styles 
-instruments = ["piano", "guitar", "violin", "drums", "flute", "trumpet", "saxophone", "clarinet"]
+#TODO add styles
+instruments = ["piano", "guitar", "violin", "drums", "flute", "trumpet", "saxophone", "clarinet", "synthesizer", "electric_guitar", "bass_guitar"]
 notes = ["C", "D", "E", "F", "G", "A", "B"]
 
 instrument_programs = {
@@ -17,6 +15,9 @@ instrument_programs = {
     "trumpet": 56,
     "saxophone": 66,
     "clarinet": 71,
+    "synthesizer": 81,
+    "electric_guitar": 27,
+    "bass_guitar": 33,
 }
 
 root_dir = "Dataset Root"
@@ -45,11 +46,12 @@ for instrument in instruments:
 
         file_counter += 1
 
+        # Create a new MIDI file for each combination
         midi_file = MidiFile()
         midi_track = MidiTrack()
         midi_file.tracks.append(midi_track)
 
-        program = instrument_programs.get(instrument, 0)
+        program = instrument_programs.get(instrument, 0)  # Get program number from the dictionary
         midi_track.append(Message("program_change", program=program))
 
         note_value = notes.index(note) + 60

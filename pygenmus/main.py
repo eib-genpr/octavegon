@@ -4,6 +4,7 @@ import json
 from midi2audio import FluidSynth as MidiFluidSynth
 from mido import MidiFile, MidiTrack, Message
 
+#TODO add styles 
 instruments = ["piano", "guitar", "violin", "drums", "flute", "trumpet", "saxophone", "clarinet"]
 notes = ["C", "D", "E", "F", "G", "A", "B"]
 

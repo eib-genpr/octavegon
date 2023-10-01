@@ -47,7 +47,6 @@ def transcribe_segment(segment):
 
     return note
 
-# Train the model
 def train_model(metadata, segment_length, sample_rate, batch_size, num_epochs):
     keys = list(metadata.keys())
     np.random.shuffle(keys)
@@ -57,6 +56,7 @@ def train_model(metadata, segment_length, sample_rate, batch_size, num_epochs):
     ]
 
     for epoch in range(num_epochs):
+        print(f"Epoch {epoch + 1}/{num_epochs}")
         for key in keys:
             file_name = key
             file_path = os.path.join("Dataset Root", metadata[file_name]["instrument"], metadata[file_name]["note"], file_name)
@@ -64,7 +64,7 @@ def train_model(metadata, segment_length, sample_rate, batch_size, num_epochs):
             note_encoded = to_categorical(notes.index(metadata[file_name]["note"]), num_classes=len(notes))
             note_batch = np.array([note_encoded] * len(segments))
 
-            model.fit(
+            history = model.fit(
                 np.array(segments),
                 note_batch,
                 batch_size=batch_size,
@@ -72,6 +72,8 @@ def train_model(metadata, segment_length, sample_rate, batch_size, num_epochs):
                 callbacks=callbacks,
                 verbose=1
             )
+
+            print(f"File: {file_name}, Loss: {history.history['loss'][0]}, Accuracy: {history.history['accuracy'][0]}")
 
 batch_size = 32
 num_epochs = 50

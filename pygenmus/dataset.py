@@ -1,5 +1,4 @@
 import os
-import random
 import json
 from midi2audio import FluidSynth as MidiFluidSynth
 from mido import MidiFile, MidiTrack, Message

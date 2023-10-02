@@ -1,0 +1,9 @@
+logs/
+
+output_segments/
+
+*.mp3
+
+*.pyc
+
+*.h5

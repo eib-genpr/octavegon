@@ -3,10 +3,11 @@ import json
 from midi2audio import FluidSynth as MidiFluidSynth
 from mido import MidiFile, MidiTrack, Message
 
-instruments = ["piano", "guitar", "violin", "drums", "flute", "trumpet", "saxophone", "clarinet", "synthesizer", "electric_guitar", "bass_guitar"]
+instruments = ["piano", "guitar", "violin", "drums", "flute", "trumpet",
+               "saxophone", "clarinet", "synthesizer", "electric_guitar", "bass_guitar"]
 notes = ["C", "D", "E", "F", "G", "A", "B"]
 
-#Add more instruments and styles
+# Add more instruments and styles
 instrument_programs = {
     "piano": 0,
     "guitar": 24,
@@ -47,19 +48,19 @@ for instrument in instruments:
 
         file_counter += 1
 
-        
         midi_file = MidiFile()
         midi_track = MidiTrack()
         midi_file.tracks.append(midi_track)
 
-        program = instrument_programs.get(instrument, 0)  
+        program = instrument_programs.get(instrument, 0)
         midi_track.append(Message("program_change", program=program))
 
         note_value = notes.index(note) + 60
         velocity = 100
         duration = 1000
 
-        midi_track.append(Message("note_on", note=note_value, velocity=velocity))
+        midi_track.append(
+            Message("note_on", note=note_value, velocity=velocity))
         midi_track.append(Message("note_off", note=note_value, time=duration))
 
         temp_midi_path = f"temp_{file_name}.mid"

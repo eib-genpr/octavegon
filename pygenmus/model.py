@@ -3,11 +3,12 @@ import json
 import numpy as np
 import tensorflow as tf
 import librosa
-from keras.layers import Dense, LSTM, Input, Flatten
+from keras.layers import Dense, LSTM, Input, Flatten, Dropout
 from keras.models import Sequential
 from keras.utils import to_categorical
 from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
 from datetime import datetime
+from sklearn.metrics import f1_score
 
 NOTES = ["C", "D", "E", "F", "G", "A", "B"]
 SEGMENT_LENGTH = 44100 * 3
@@ -42,6 +43,10 @@ def transcribe_segment(segment, model):
 def train_one_epoch(metadata, segment_length, sample_rate, model, epoch):
     keys = list(metadata.keys())
     np.random.shuffle(keys)
+    
+    losses = []
+    accuracies = []
+    f1_scores = []
 
     for i, key in enumerate(keys):
         file_name = key
@@ -59,11 +64,32 @@ def train_one_epoch(metadata, segment_length, sample_rate, model, epoch):
                 verbose=1
             )
 
-            print(f"Epoch: {epoch + 1}, Entry {i + 1}/{len(keys)}, File: {file_name}, Loss: {history.history['loss'][0]}, Accuracy: {history.history['accuracy'][0]}")
+            losses.append(history.history['loss'][0])
+            accuracies.append(history.history['accuracy'][0])
+
+            # Use F1-score as an additional metric
+            predicted_labels = np.argmax(model.predict(np.array(segments)), axis=1)
+            true_labels = np.argmax(note_batch, axis=1)
+            f1 = f1_score(true_labels, predicted_labels, average='weighted')
+            f1_scores.append(f1)
+
+            print(f"Epoch: {epoch + 1}, Entry {i + 1}/{len(keys)}, File: {file_name}, Loss: {losses[-1]}, Accuracy: {accuracies[-1]}, F1-Score: {f1_scores[-1]}")
+
+    # Save the training results for this epoch
+    with open(f"logs/training_results_epoch{epoch + 1}.json", "w") as result_file:
+        results = {
+            "losses": losses,
+            "accuracies": accuracies,
+            "f1_scores": f1_scores
+        }
+        json.dump(results, result_file)
 
 model = Sequential()
 model.add(Input(shape=INPUT_SHAPE))
+model.add(LSTM(256, return_sequences=True))
+model.add(Dropout(0.5))
 model.add(LSTM(128, return_sequences=True))
+model.add(Dropout(0.5))
 model.add(Dense(128, activation="relu"))
 model.add(Dense(64, activation="relu"))
 model.add(Flatten())

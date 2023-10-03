@@ -22,7 +22,7 @@ instrument_programs = {
     "bass_guitar": 33,
 }
 
-root_dir = "Dataset Root"
+root_dir = "dataset_root"
 
 if not os.path.exists(root_dir):
     os.mkdir(root_dir)

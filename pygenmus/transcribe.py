@@ -3,7 +3,7 @@ import librosa
 import numpy as np
 import tensorflow as tf
 
-model = tf.keras.models.load_model("music_transcription_model.h5")
+model = tf.keras.models.load_model("generated_models\music_transcription_model.h5")
 notes = ["C", "D", "E", "F", "G", "A", "B"]
 
 note_to_midi = {
@@ -16,8 +16,8 @@ note_to_midi = {
     "B": 71,
 }
 
+
 def transcribe(audio_segment, model):
-    # Ensure the segment is in the shape expected by your model
     segment = audio_segment.reshape((1, segment_length, 1))
 
     note_prediction = model.predict(segment)
@@ -27,8 +27,9 @@ def transcribe(audio_segment, model):
 
     return note
 
-input_audio_file = "fur_elise.mp3"  # Replace with the path to the "Fur Elise" audio file
-output_dir = "output_segments"
+
+input_audio_file = "input\fur_elise.mp3"
+output_dir = "output"
 
 os.makedirs(output_dir, exist_ok=True)
 
@@ -49,8 +50,7 @@ for i, start_sample in enumerate(range(0, len(audio_data), segment_length)):
 
     print(f"Segment {i+1}: Note {note}")
 
-# Save the transcribed notes to a text file for comparison
-output_notes_file = "transcribed_notes.txt"
+output_notes_file = "output\transcribed_notes.txt"
 with open(output_notes_file, "w") as f:
     for note in all_notes:
         f.write(note + "\n")

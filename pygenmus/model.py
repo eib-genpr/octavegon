@@ -32,7 +32,7 @@ def load_audio_data(file_path, segment_length, sample_rate, augment=False):
         for i in range(num_segments):
             segment = audio_data[i * segment_length: (i + 1) * segment_length]
             if augment and np.random.rand() < 0.5:
-                # Apply data augmentation techniques here
+                # //TODO Apply data augmentation techniques here
                 # Random pitch shift
                 segment = pitch_shift(segment, sample_rate)
             segments.append(segment.reshape(-1, 1))
@@ -94,7 +94,6 @@ def train_one_epoch(metadata, segment_length, sample_rate, model, epoch, log_fil
                     losses.append(loss)
                     accuracies.append(accuracy)
 
-                    # Use F1-score as an additional metric
                     predicted_labels = np.argmax(
                         model.predict(batch_segments), axis=1)
                     true_labels = np.argmax(batch_labels, axis=1)
@@ -102,7 +101,6 @@ def train_one_epoch(metadata, segment_length, sample_rate, model, epoch, log_fil
                         true_labels, predicted_labels, average='weighted')
                     f1_scores.append(f1)
 
-                    # Print the metrics for this batch
                     log_str = f"Epoch: {epoch + 1}, Entry {i + 1}/{len(keys)}, File: {file_name}, Loss: {loss}, Accuracy: {accuracy}, F1-Score: {f1}\n"
                     print(log_str)
                     log_file.write(log_str)

@@ -16,3 +16,6 @@ Octavegon is an 8-bit music generator that combines C++ for audio synthesis and 
 ### Trained Model for Transcription (WIP)
 
 The project now includes a transcription feature that allows you to transcribe notes from audio segments. A trained model accurately identifies notes played in the provided audio.
+
+
+**Note:** Trained model and generated dataset is not included is here as they have huge sizes now

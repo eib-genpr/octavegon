@@ -1,22 +1,24 @@
 import json
 import os
 import librosa
+import numpy as np
+import tensorflow as tf
+from datetime import datetime
 from keras.layers import Dense, LSTM, Input, Flatten, Dropout
 from keras.models import Sequential
 from keras.utils import to_categorical
-from keras.callbacks import EarlyStopping, ModelCheckpoint, TensorBoard
-from datetime import datetime
 from sklearn.metrics import f1_score
-import numpy as np
-import tensorflow as tf
-import logging
+from keras.callbacks import ModelCheckpoint, TensorBoard
 
+# Define constants
 NOTES = ["C", "D", "E", "F", "G", "A", "B"]
-SEGMENT_LENGTH = 44100 * 3
+SEGMENT_LENGTH = 44100 * 3  # Adjust as needed
 SAMPLE_RATE = 44100
 INPUT_SHAPE = (SEGMENT_LENGTH, 1)
 BATCH_SIZE = 32
 NUM_EPOCHS = 50
+NUM_NOTES = len(NOTES)
+NUM_INSTRUMENTS = 2
 
 
 def pitch_shift(segment, sample_rate, max_steps=2.0):
@@ -29,25 +31,19 @@ def load_audio_data(file_path, segment_length, sample_rate, augment=False):
         audio_data, _ = librosa.load(file_path, sr=sample_rate)
         num_segments = len(audio_data) // segment_length
         segments = []
+
         for i in range(num_segments):
             segment = audio_data[i * segment_length: (i + 1) * segment_length]
+
             if augment and np.random.rand() < 0.5:
-                # Apply data augmentation techniques here
-                # Random pitch shift
                 segment = pitch_shift(segment, sample_rate)
+
             segments.append(segment.reshape(-1, 1))
+
         return segments
     except Exception as e:
         print(f"Error loading audio data: {e}")
         return []
-
-
-def transcribe_segment(segment, model):
-    segment = segment.reshape((1, SEGMENT_LENGTH, 1))
-    note_prediction = model.predict(segment)
-    note_index = np.argmax(note_prediction)
-    note = NOTES[note_index]
-    return note
 
 
 def train_one_epoch(metadata, segment_length, sample_rate, model, epoch, log_file):
@@ -61,15 +57,22 @@ def train_one_epoch(metadata, segment_length, sample_rate, model, epoch, log_fil
     for i, key in enumerate(keys):
         file_name = key
         file_path = os.path.join(
-            "dataset_root", metadata[file_name]["instrument"], metadata[file_name]["note"], file_name)
+            "dataset_root", metadata[file_name].get("instrument1", ""),
+            metadata[file_name].get("note1", ""), file_name)
 
-        # Enable data augmentation for a portion of the data
+        # Data augmentation for a portion of the data
         augment = np.random.rand() < 0.5
         segments = load_audio_data(
             file_path, segment_length, sample_rate, augment=augment)
-        note_encoded = to_categorical(NOTES.index(
-            metadata[file_name]["note"]), num_classes=len(NOTES))
-        note_batch = np.array([note_encoded] * len(segments))
+
+        if "instrument2" in metadata[file_name] and "note2" in metadata[file_name]:
+            notes_encoded = [to_categorical(NOTES.index(metadata[file_name]["note1"]), num_classes=NUM_NOTES),
+                             to_categorical(NOTES.index(metadata[file_name]["note2"]), num_classes=NUM_NOTES)]
+            notes_batch = np.array([notes_encoded] * len(segments))
+        else:
+            notes_encoded = [to_categorical(NOTES.index(
+                metadata[file_name]["note1"]), num_classes=NUM_NOTES)]
+            notes_batch = np.array([notes_encoded] * len(segments))
 
         if len(segments) > 0:
             # Mini-batch training loop
@@ -78,7 +81,7 @@ def train_one_epoch(metadata, segment_length, sample_rate, model, epoch, log_fil
                 start_idx = batch_idx * BATCH_SIZE
                 end_idx = (batch_idx + 1) * BATCH_SIZE
                 batch_segments = np.array(segments[start_idx:end_idx])
-                batch_labels = note_batch[start_idx:end_idx]
+                batch_labels = notes_batch[start_idx:end_idx]
 
                 history = model.fit(
                     batch_segments,
@@ -94,10 +97,10 @@ def train_one_epoch(metadata, segment_length, sample_rate, model, epoch, log_fil
                     losses.append(loss)
                     accuracies.append(accuracy)
 
-                    # Use F1-score as an additional metric
+                    # F1-score as an additional metric
                     predicted_labels = np.argmax(
                         model.predict(batch_segments), axis=1)
-                    true_labels = np.argmax(batch_labels, axis=1)
+                    true_labels = np.argmax(batch_labels, axis=2)
                     f1 = f1_score(
                         true_labels, predicted_labels, average='weighted')
                     f1_scores.append(f1)
@@ -119,7 +122,7 @@ def main():
     model.add(Dense(128, activation="relu"))
     model.add(Dense(64, activation="relu"))
     model.add(Flatten())
-    model.add(Dense(len(NOTES), activation="softmax"))
+    model.add(Dense(NUM_NOTES * NUM_INSTRUMENTS, activation="softmax"))
     model.compile(loss="categorical_crossentropy",
                   optimizer="adam", metrics=["accuracy"])
 
@@ -132,7 +135,7 @@ def main():
     log_file_path = os.path.join(log_dir, "training.log")
     log_file = open(log_file_path, "w")
 
-    with open("dataset_root\metadata.json", "r") as metadata_file:
+    with open("dataset_root/metadata.json", "r") as metadata_file:
         metadata = json.load(metadata_file)
 
     for epoch in range(NUM_EPOCHS):
@@ -141,7 +144,7 @@ def main():
             metadata, SEGMENT_LENGTH, SAMPLE_RATE, model, epoch, log_file)
 
     log_file.close()
-    model.save("generated_models\music_transcription_model.h5")
+    model.save("generated_models/music_transcription_model.h5")
 
 
 if __name__ == "__main__":

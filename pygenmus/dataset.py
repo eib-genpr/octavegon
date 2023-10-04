@@ -7,11 +7,12 @@ import librosa
 import numpy as np
 
 # Define constants
+#//TODO drums do not have notes
 INSTRUMENTS = ["piano", "guitar", "violin", "drums", "flute", "trumpet",
                "saxophone", "clarinet", "synthesizer", "electric_guitar", "bass_guitar"]
 NOTES = ["C", "D", "E", "F", "G", "A", "B"]
 
-# Add more instruments and styles
+#//TODO Add more instruments and styles
 INSTRUMENT_PROGRAMS = {
     "piano": 0,
     "guitar": 24,
@@ -32,13 +33,6 @@ OVERLAP = True
 SEGMENT_LENGTH = 44100 * 3
 SAMPLE_RATE = 44100
 VOLUME_FACTOR = 10.0
-
-MAX_PITCH_SHIFT_STEPS = 2.0
-
-
-def pitch_shift(segment, max_steps=MAX_PITCH_SHIFT_STEPS):
-    steps = np.random.uniform(-max_steps, max_steps)
-    return librosa.effects.pitch_shift(segment, sr=SAMPLE_RATE, n_steps=steps)
 
 
 def load_audio_data(file_path, segment_length, overlap=False):
@@ -132,7 +126,7 @@ def main():
                         metadata[file_name] = {
                             "instrument1": instrument1, "note1": note1, "instrument2": instrument2, "note2": note2}
 
-    # Non-overlapping single instrument single note files
+    # Non-overlapping single instrument single note files //TODO reduce duplicate instrument and notes
     for instrument in INSTRUMENTS:
         for note in NOTES:
             file_name = f"{instrument}_{note}.wav"
@@ -164,7 +158,7 @@ def main():
             os.remove(temp_midi_path)
 
             metadata[file_name] = {
-                "instrument": instrument, "note": note}
+                "instrument1": instrument, "note1": note}
 
     metadata_path = os.path.join(ROOT_DIR, "metadata.json")
     with open(metadata_path, "w", encoding='utf-8') as f:

@@ -5,19 +5,16 @@ from midi2audio import FluidSynth as MidiFluidSynth
 from mido import MidiFile, MidiTrack, Message
 import librosa
 import numpy as np
+import random
 
-# Define constants
-#//TODO drums do not have notes
-INSTRUMENTS = ["piano", "guitar", "violin", "drums", "flute", "trumpet",
+INSTRUMENTS = ["piano", "guitar", "violin", "flute", "trumpet",
                "saxophone", "clarinet", "synthesizer", "electric_guitar", "bass_guitar"]
 NOTES = ["C", "D", "E", "F", "G", "A", "B"]
 
-#//TODO Add more instruments and styles
 INSTRUMENT_PROGRAMS = {
     "piano": 0,
     "guitar": 24,
     "violin": 40,
-    "drums": 118,
     "flute": 73,
     "trumpet": 56,
     "saxophone": 66,
@@ -30,140 +27,128 @@ INSTRUMENT_PROGRAMS = {
 ROOT_DIR = "dataset_root"
 AUGMENT = True
 OVERLAP = True
-SEGMENT_LENGTH = 44100 * 3
+SEGMENT_LENGTH = 44100 * 7
 SAMPLE_RATE = 44100
 VOLUME_FACTOR = 10.0
 
+def random_duration():
+    return round(random.uniform(0.1, 2.0), 3)
 
-def load_audio_data(file_path, segment_length, overlap=False):
-    audio_data, _ = librosa.load(file_path, sr=SAMPLE_RATE)
-    num_segments = len(audio_data) // segment_length
+def handle_overlapping_notes(active_notes, end_timestamp):
+    notes_to_remove = []
+    for note, (start_timestamp, duration) in active_notes.items():
+        if start_timestamp + duration < end_timestamp:
+            notes_to_remove.append(note)
+    for note in notes_to_remove:
+        del active_notes[note]
 
-    if overlap:
-        step_size = segment_length // 2
-    else:
-        step_size = segment_length
+def generate_segment():
+    midi_file = MidiFile()
+    midi_track = MidiTrack()
+    midi_file.tracks.append(midi_track)
 
-    for i in range(0, len(audio_data) - segment_length + 1, step_size):
-        audio_segment = audio_data[i:i + segment_length]
-        audio_segment *= VOLUME_FACTOR
+    total_duration = 0.0
+    active_notes = {}
 
-        yield audio_segment.reshape(-1, 1)
+    while total_duration < 7.0:
+        instrument = random.choice(INSTRUMENTS)
+        note = random.choice(NOTES)
+        duration = random_duration()
 
+        program = INSTRUMENT_PROGRAMS.get(instrument, 0)
+        midi_track.append(
+            Message("program_change", program=program))
+
+        note_value = NOTES.index(note) + 60
+        velocity = 100
+        duration_ms = int(duration * 1000)
+
+        start_timestamp = total_duration
+        end_timestamp = total_duration + duration
+        handle_overlapping_notes(active_notes, start_timestamp)
+
+        midi_track.append(
+            Message("note_on", note=note_value, velocity=velocity))
+        midi_track.append(
+            Message("note_off", note=note_value, time=duration_ms))
+
+        active_notes[note_value] = (start_timestamp, duration)
+        total_duration = end_timestamp
+
+    return midi_file
+
+def combine_segments(segment1, segment2):
+    combined_segment = MidiFile()
+    combined_segment.tracks.append(segment1.tracks[0])
+    combined_segment.tracks.append(segment2.tracks[0])
+
+    return combined_segment
 
 def main():
     if not os.path.exists(ROOT_DIR):
         os.makedirs(ROOT_DIR)
 
-    for instrument in INSTRUMENTS:
-        instrument_dir = os.path.join(ROOT_DIR, instrument)
-        os.makedirs(instrument_dir, exist_ok=True)
-        for note in NOTES:
-            note_dir = os.path.join(instrument_dir, note)
-            os.makedirs(note_dir, exist_ok=True)
-
     metadata = {}
     fs = MidiFluidSynth()
 
-    # Overlapping
-    for instrument1 in INSTRUMENTS:
-        for note1 in NOTES:
-            for instrument2 in INSTRUMENTS:
-                for note2 in NOTES:
-                    if instrument1 != instrument2 or note1 != note2:
-                        file_name = f"{instrument1}_{note1}_{instrument2}_{note2}.wav"
-                        file_path = os.path.join(
-                            ROOT_DIR, instrument1, note1, file_name)
+    for i in range(100):
+        segment1 = generate_segment()
+        segment2 = generate_segment()
 
-                        midi_file = MidiFile()
+        combined_segment = combine_segments(segment1, segment2)
 
-                        midi_track1 = MidiTrack()
-                        midi_track2 = MidiTrack()
-                        midi_file.tracks.extend([midi_track1, midi_track2])
+        combined_segment_name = f"combined_segment_{i}.wav"
+        combined_file_path = os.path.join(ROOT_DIR, combined_segment_name)
 
-                        program1 = INSTRUMENT_PROGRAMS.get(instrument1, 0)
-                        midi_track1.append(
-                            Message("program_change", program=program1))
+        total_duration = 7.0
 
-                        note_value1 = NOTES.index(note1) + 60
-                        velocity = 100
-                        duration = 1000
+        temp_midi_path = os.path.join(ROOT_DIR, f"temp_{combined_segment_name}.mid")
+        combined_segment.save(temp_midi_path)
 
-                        midi_track1.append(
-                            Message("note_on", note=note_value1, velocity=velocity))
-                        midi_track1.append(
-                            Message("note_off", note=note_value1, time=duration))
+        fs.midi_to_audio(temp_midi_path, combined_file_path)
+        os.remove(temp_midi_path)
 
-                        program2 = INSTRUMENT_PROGRAMS.get(instrument2, 0)
-                        midi_track2.append(
-                            Message("program_change", program=program2))
+        instrument_metadata = {}
+        program = 0
+        for track in combined_segment.tracks:
+            active_notes = {}
+            for msg in track:
+                if msg.type == "program_change":
+                    program = msg.program
+                if msg.type == "note_on":
+                    note = msg.note
+                    if note in active_notes:
+                        start_timestamp = active_notes[note][0]
+                        duration = (msg.time / 1000.0) - start_timestamp
+                        instrument_metadata.setdefault(
+                            INSTRUMENTS[program % len(INSTRUMENTS)], {}).setdefault(
+                            NOTES[note % 12], []).append({
+                            "duration": round(duration, 3),
+                            "start_timestamp": round(start_timestamp, 3),
+                            "end_timestamp": round(start_timestamp + duration, 3)
+                        })
+                        del active_notes[note]
+                    else:
+                        active_notes[note] = (msg.time / 1000.0, 0.0)
+                elif msg.type == "note_off":
+                    note = msg.note
+                    if note in active_notes:
+                        start_timestamp = active_notes[note][0]
+                        duration = active_notes[note][1]
+                        instrument_metadata.setdefault(
+                            INSTRUMENTS[program % len(INSTRUMENTS)], {}).setdefault(
+                            NOTES[note % 12], []).append({
+                            "duration": round(duration, 3),
+                            "start_timestamp": round(start_timestamp, 3),
+                            "end_timestamp": round(start_timestamp + duration, 3)
+                        })
+                        del active_notes[note]
 
-                        note_value2 = NOTES.index(note2) + 60
-                        midi_track2.append(
-                            Message("note_on", note=note_value2, velocity=velocity))
-                        midi_track2.append(
-                            Message("note_off", note=note_value2, time=duration))
-
-                        temp_midi_path = os.path.join(
-                            instrument1, note1, f"temp_{file_name}.mid")
-                        temp_midi_path = os.path.join(ROOT_DIR, temp_midi_path)
-                        midi_file.save(temp_midi_path)
-
-                        fs.midi_to_audio(temp_midi_path, file_path)
-                        os.remove(temp_midi_path)
-
-                        audio_segments1 = list(load_audio_data(
-                            file_path, SEGMENT_LENGTH, OVERLAP))
-                        audio_segments2 = list(load_audio_data(
-                            file_path, SEGMENT_LENGTH, OVERLAP))
-
-                        audio_segments = [
-                            seg1 + seg2 for seg1, seg2 in zip(audio_segments1, audio_segments2)]
-
-                        sf.write(file_path, np.vstack(
-                            audio_segments), SAMPLE_RATE)
-
-                        metadata[file_name] = {
-                            "instrument1": instrument1, "note1": note1, "instrument2": instrument2, "note2": note2}
-
-    # Non-overlapping single instrument single note files //TODO reduce duplicate instrument and notes
-    for instrument in INSTRUMENTS:
-        for note in NOTES:
-            file_name = f"{instrument}_{note}.wav"
-            file_path = os.path.join(ROOT_DIR, instrument, note, file_name)
-
-            midi_file = MidiFile()
-            midi_track = MidiTrack()
-            midi_file.tracks.append(midi_track)
-
-            program = INSTRUMENT_PROGRAMS.get(instrument, 0)
-            midi_track.append(
-                Message("program_change", program=program))
-
-            note_value = NOTES.index(note) + 60
-            velocity = 100
-            duration = 1000
-
-            midi_track.append(
-                Message("note_on", note=note_value, velocity=velocity))
-            midi_track.append(
-                Message("note_off", note=note_value, time=duration))
-
-            temp_midi_path = os.path.join(
-                instrument, note, f"temp_{file_name}.mid")
-            temp_midi_path = os.path.join(ROOT_DIR, temp_midi_path)
-            midi_file.save(temp_midi_path)
-
-            fs.midi_to_audio(temp_midi_path, file_path)
-            os.remove(temp_midi_path)
-
-            metadata[file_name] = {
-                "instrument1": instrument, "note1": note}
+        metadata[combined_segment_name] = instrument_metadata
 
     metadata_path = os.path.join(ROOT_DIR, "metadata.json")
     with open(metadata_path, "w", encoding='utf-8') as f:
         json.dump(metadata, f, indent=4)
-
 
 if __name__ == "__main__":
     main()

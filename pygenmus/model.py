@@ -1,5 +1,5 @@
-import json
 import os
+import json
 import librosa
 import numpy as np
 import tensorflow as tf
@@ -56,58 +56,62 @@ def train_one_epoch(metadata, segment_length, sample_rate, model, epoch, log_fil
 
     for i, key in enumerate(keys):
         file_name = key
-        file_path = os.path.join(
-            "dataset_root", metadata[file_name].get("instrument1", ""),
-            metadata[file_name].get("note1", ""), file_name)
+        file_path = os.path.join("dataset_root", file_name)
 
         # Data augmentation for a portion of the data
         augment = np.random.rand() < 0.5
         segments = load_audio_data(
             file_path, segment_length, sample_rate, augment=augment)
 
-        if "instrument2" in metadata[file_name] and "note2" in metadata[file_name]:
-            notes_encoded = [to_categorical(NOTES.index(metadata[file_name]["note1"]), num_classes=NUM_NOTES),
-                             to_categorical(NOTES.index(metadata[file_name]["note2"]), num_classes=NUM_NOTES)]
+        if file_name in metadata:
+            instrument_data = metadata[file_name]
+            num_instruments = len(instrument_data)
+
+            notes_encoded = []
+            for instrument_name, instrument_info in instrument_data.items():
+                for note_name, note_info_list in instrument_info.items():
+                    for note_info in note_info_list:
+                        duration = note_info['duration']
+                        note_encoded = to_categorical(
+                            NOTES.index(note_name), num_classes=NUM_NOTES)
+                        notes_encoded.append(note_encoded)
+
             notes_batch = np.array([notes_encoded] * len(segments))
-        else:
-            notes_encoded = [to_categorical(NOTES.index(
-                metadata[file_name]["note1"]), num_classes=NUM_NOTES)]
-            notes_batch = np.array([notes_encoded] * len(segments))
 
-        if len(segments) > 0:
-            # Mini-batch training loop
-            num_batches = len(segments) // BATCH_SIZE
-            for batch_idx in range(num_batches):
-                start_idx = batch_idx * BATCH_SIZE
-                end_idx = (batch_idx + 1) * BATCH_SIZE
-                batch_segments = np.array(segments[start_idx:end_idx])
-                batch_labels = notes_batch[start_idx:end_idx]
+            if len(segments) > 0:
+                # Mini-batch training loop
+                num_batches = len(segments) // BATCH_SIZE
+                for batch_idx in range(num_batches):
+                    start_idx = batch_idx * BATCH_SIZE
+                    end_idx = (batch_idx + 1) * BATCH_SIZE
+                    batch_segments = np.array(segments[start_idx:end_idx])
+                    batch_labels = notes_batch[start_idx:end_idx]
 
-                history = model.fit(
-                    batch_segments,
-                    batch_labels,
-                    batch_size=BATCH_SIZE,
-                    epochs=1,
-                    verbose=0,
-                )
-                loss = history.history['loss'][0]
-                accuracy = history.history['accuracy'][0]
+                    history = model.fit(
+                        batch_segments,
+                        batch_labels,
+                        batch_size=BATCH_SIZE,
+                        epochs=1,
+                        verbose=0,
+                    )
+                    loss = history.history['loss'][0]
+                    accuracy = history.history['accuracy'][0]
 
-                if not np.isnan(loss) and not np.isnan(accuracy):
-                    losses.append(loss)
-                    accuracies.append(accuracy)
+                    if not np.isnan(loss) and not np.isnan(accuracy):
+                        losses.append(loss)
+                        accuracies.append(accuracy)
 
-                    # F1-score as an additional metric
-                    predicted_labels = np.argmax(
-                        model.predict(batch_segments), axis=1)
-                    true_labels = np.argmax(batch_labels, axis=2)
-                    f1 = f1_score(
-                        true_labels, predicted_labels, average='weighted')
-                    f1_scores.append(f1)
+                        # F1-score as an additional metric
+                        predicted_labels = np.argmax(
+                            model.predict(batch_segments), axis=1)
+                        true_labels = np.argmax(batch_labels, axis=2)
+                        f1 = f1_score(
+                            true_labels, predicted_labels, average='weighted')
+                        f1_scores.append(f1)
 
-                    log_str = f"Epoch: {epoch + 1}, Entry {i + 1}/{len(keys)}, File: {file_name}, Loss: {loss}, Accuracy: {accuracy}, F1-Score: {f1}\n"
-                    print(log_str)
-                    log_file.write(log_str)
+                        log_str = f"Epoch: {epoch + 1}, Entry {i + 1}/{len(keys)}, File: {file_name}, Loss: {loss}, Accuracy: {accuracy}, F1-Score: {f1}\n"
+                        print(log_str)
+                        log_file.write(log_str)
 
     return losses, accuracies, f1_scores
 

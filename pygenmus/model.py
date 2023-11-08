@@ -22,6 +22,7 @@ BATCH_SIZE = 32
 NUM_EPOCHS = 50
 NUM_NOTES = len(NOTES)
 
+
 def load_audio_data(file_path, sample_rate):
     try:
         audio_data, _ = librosa.load(file_path, sr=sample_rate)
@@ -30,10 +31,11 @@ def load_audio_data(file_path, sample_rate):
         print(f"Error loading audio data: {e}")
         return None
 
+
 def load_dataset(directory, metadata_file):
     with open(metadata_file, 'r') as f:
         metadata = json.load(f)
-    
+
     dataset = []
     for filename, notes in metadata.items():
         file_path = os.path.join(directory, filename)
@@ -41,10 +43,12 @@ def load_dataset(directory, metadata_file):
         if audio_data is None:
             continue
         for note_info in notes:
-            note_encoded = to_categorical(NOTES.index(note_info['note']), num_classes=NUM_NOTES)
+            note_encoded = to_categorical(NOTES.index(
+                note_info['note']), num_classes=NUM_NOTES)
             dataset.append((audio_data, note_encoded))
-    
+
     return dataset
+
 
 def main():
     print("Loading data...")
@@ -58,14 +62,16 @@ def main():
     model.add(LSTM(128, return_sequences=False))
     model.add(Dropout(0.5))
     model.add(Dense(NUM_NOTES, activation="softmax"))
-    model.compile(loss="categorical_crossentropy", optimizer="adam", metrics=["accuracy"])
+    model.compile(loss="categorical_crossentropy",
+                  optimizer="adam", metrics=["accuracy"])
 
     print("Starting training...")
     train_segments, train_labels = zip(*train_data)
     train_segments = np.array(train_segments)
     train_labels = np.array(train_labels)
 
-    model.fit(train_segments, train_labels, batch_size=BATCH_SIZE, epochs=NUM_EPOCHS)
+    model.fit(train_segments, train_labels,
+              batch_size=BATCH_SIZE, epochs=NUM_EPOCHS)
 
     print("Evaluating model...")
     test_segments, test_labels = zip(*test_data)
@@ -76,6 +82,7 @@ def main():
     print(f"Test accuracy: {accuracy}")
 
     print("Training complete.")
+
 
 if __name__ == "__main__":
     main()

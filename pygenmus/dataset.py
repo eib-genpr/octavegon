@@ -2,9 +2,10 @@ import os
 import json
 import soundfile as sf
 from midi2audio import FluidSynth
-from mido import MidiFile, MidiTrack, Message
+from mido import MidiFile, MidiTrack, Message, MetaMessage
 import random
 import shutil
+import numpy as np
 
 
 INSTRUMENTS = ["piano", "guitar", "violin", "flute", "trumpet",
@@ -89,10 +90,22 @@ def generate_segment():
     return midi_file, all_notes
 
 
-def combine_segments(segment1, segment2):
+def combine_segments(segment1, segment2, segment_duration=7):
     combined_segment = MidiFile()
     combined_segment.tracks.append(segment1.tracks[0])
     combined_segment.tracks.append(segment2.tracks[0])
+
+    total_time = sum(
+        msg.time for track in combined_segment.tracks for msg in track if not isinstance(msg, MetaMessage))
+
+    if total_time < segment_duration:
+        silence_duration = segment_duration - total_time
+        silence_msg_on = Message('note_on', note=0, velocity=0, time=0)
+        silence_msg_off = Message(
+            'note_off', note=0, velocity=0, time=silence_duration)
+        combined_segment.tracks[-1].append(silence_msg_on)
+        combined_segment.tracks[-1].append(silence_msg_off)
+
     return combined_segment
 
 

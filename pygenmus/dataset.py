@@ -90,21 +90,37 @@ def generate_segment():
     return midi_file, all_notes
 
 
-def combine_segments(segment1, segment2, segment_duration=7):
-    combined_segment = MidiFile()
-    combined_segment.tracks.append(segment1.tracks[0])
-    combined_segment.tracks.append(segment2.tracks[0])
+def combine_segments(segment1, segment2, segment_duration=SEGMENT_DURATION, ticks_per_beat=480):
+    combined_segment = MidiFile(ticks_per_beat=ticks_per_beat)
+    track1 = segment1.tracks[0]
+    track2 = segment2.tracks[0]
 
-    total_time = sum(
-        msg.time for track in combined_segment.tracks for msg in track if not isinstance(msg, MetaMessage))
+    combined_track = MidiTrack()
+    combined_segment.tracks.append(combined_track)
 
-    if total_time < segment_duration:
-        silence_duration = segment_duration - total_time
-        silence_msg_on = Message('note_on', note=0, velocity=0, time=0)
-        silence_msg_off = Message(
-            'note_off', note=0, velocity=0, time=silence_duration)
-        combined_segment.tracks[-1].append(silence_msg_on)
-        combined_segment.tracks[-1].append(silence_msg_off)
+    for msg in track1:
+        combined_track.append(msg)
+
+    track1_total_ticks = sum(msg.time for msg in track1 if not msg.is_meta)
+
+    silence_needed_ticks = int(
+        segment_duration * ticks_per_beat) - track1_total_ticks
+    if silence_needed_ticks > 0:
+        combined_track.append(
+            Message('note_off', note=0, velocity=0, time=silence_needed_ticks))
+
+    for msg in track2:
+        if not msg.is_meta:
+            msg.time = int(msg.time)
+        combined_track.append(msg)
+
+    combined_length_ticks = sum(
+        msg.time for msg in combined_track if not msg.is_meta)
+    additional_silence_ticks = int(
+        (segment_duration * ticks_per_beat) - combined_length_ticks)
+    if additional_silence_ticks > 0:
+        combined_track.append(
+            Message('note_off', note=0, velocity=0, time=additional_silence_ticks))
 
     return combined_segment
 

@@ -90,21 +90,42 @@ def generate_segment():
     return midi_file, all_notes
 
 
-def combine_segments(segment1, segment2, segment_duration=7):
-    combined_segment = MidiFile()
-    combined_segment.tracks.append(segment1.tracks[0])
-    combined_segment.tracks.append(segment2.tracks[0])
+def combine_segments(segment1, segment2, ticks_per_beat=480):
+    combined_segment = MidiFile(ticks_per_beat=ticks_per_beat)
 
-    total_time = sum(
-        msg.time for track in combined_segment.tracks for msg in track if not isinstance(msg, MetaMessage))
+    combined_track1 = MidiTrack()
+    combined_track2 = MidiTrack()
+    combined_segment.tracks.append(combined_track1)
+    combined_segment.tracks.append(combined_track2)
 
-    if total_time < segment_duration:
-        silence_duration = segment_duration - total_time
-        silence_msg_on = Message('note_on', note=0, velocity=0, time=0)
-        silence_msg_off = Message(
-            'note_off', note=0, velocity=0, time=silence_duration)
-        combined_segment.tracks[-1].append(silence_msg_on)
-        combined_segment.tracks[-1].append(silence_msg_off)
+    for msg in segment1.tracks[0]:
+        combined_track1.append(msg.copy())
+
+    for msg in segment2.tracks[0]:
+        combined_track2.append(msg.copy())
+
+    desired_length_ticks = int(SEGMENT_DURATION * ticks_per_beat)
+
+    def pad_track_with_silence(track, desired_length):
+        track_length = sum(msg.time for msg in track)
+        if track_length < desired_length:
+            silence_duration = desired_length - track_length
+            track.append(Message('note_off', note=0, velocity=0, time=silence_duration))
+
+    pad_track_with_silence(combined_track1, desired_length_ticks)
+    pad_track_with_silence(combined_track2, desired_length_ticks)
+
+    def trim_messages(track, desired_length):
+        accumulated_time = 0
+        for i, msg in enumerate(track):
+            accumulated_time += msg.time
+            if accumulated_time >= desired_length:
+                msg.time -= accumulated_time - desired_length
+                return track[:i+1]
+        return track
+
+    combined_track1[:] = trim_messages(combined_track1, desired_length_ticks)
+    combined_track2[:] = trim_messages(combined_track2, desired_length_ticks)
 
     return combined_segment
 

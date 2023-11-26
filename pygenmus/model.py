@@ -7,7 +7,7 @@ from keras.layers import Dense, LSTM, Input, Dropout
 from keras.models import Sequential
 from keras.utils import to_categorical
 from sklearn.metrics import f1_score
-from keras.callbacks import Callback
+from keras.callbacks import Callback, ModelCheckpoint
 from tqdm.keras import TqdmCallback
 
 os.environ['CUDA_VISIBLE_DEVICES'] = '0'
@@ -75,6 +75,13 @@ def prepare_dataset(dataset):
 
 
 def main():
+
+    checkpoint = ModelCheckpoint(filepath='model_checkpoint.h5',
+                                 monitor='val_loss',
+                                 verbose=1,
+                                 save_best_only=True,
+                                 mode='min')
+
     gpus = tf.config.experimental.list_physical_devices('GPU')
     if gpus:
         try:
@@ -103,13 +110,14 @@ def main():
 
     print("Starting training...")
     model.fit(train_data, epochs=NUM_EPOCHS, verbose=1,
-              callbacks=[TqdmCallback(), BatchLoggingCallback()])
+              callbacks=[TqdmCallback(), BatchLoggingCallback(), checkpoint])
 
     print("Evaluating model...")
     _, accuracy = model.evaluate(test_data)
     print(f"Test accuracy: {accuracy}")
 
     print("Training complete.")
+    model.save('path_to_my_model.h5')
 
 
 if __name__ == "__main__":

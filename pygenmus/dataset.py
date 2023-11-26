@@ -28,7 +28,7 @@ INSTRUMENT_PROGRAMS = {
 ROOT_DIR = "dataset_root"
 TRAIN_DIR = os.path.join(ROOT_DIR, "train")
 TEST_DIR = os.path.join(ROOT_DIR, "test")
-SEGMENT_DURATION = 7.0
+SEGMENT_DURATION = 3.0
 SAMPLE_RATE = 44100
 SOUNDFONT_PATH = "C:\\soundfonts\\FluidR3_GM.sf2"
 TRAIN_SPLIT = 0.8
@@ -146,7 +146,7 @@ def main():
     metadata = {'train': {}, 'test': {}}
     fs = FluidSynth(SOUNDFONT_PATH)
 
-    total_files = 1000
+    total_files = 100
     train_indices, test_indices = split_dataset(total_files, TRAIN_SPLIT)
 
     for i in range(total_files):

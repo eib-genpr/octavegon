@@ -30,7 +30,7 @@ for directory in directories:
             audio_path = os.path.join(audio_directory, filename)
             duration = get_audio_duration(audio_path)
 
-            if not 6.99 <= duration <= 7.01:
+            if not 2.99 <= duration <= 3.01:
                 os.remove(audio_path)
                 remove_entry_from_metadata(metadata_file, filename)
                 print(f"Deleted from {directory}: {filename}")
